@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Django 数据库操作 - Chevalier de bronze</title><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="black"><meta name="application-name" content="Little Blog"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="msapplication-TileColor" content="black"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Little Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="Django数据库操作"><meta property="og:type" content="blog"><meta property="og:title" content="Django 数据库操作"><meta property="og:url" content="http://sokrates.com.cn/2022/11/30/Study-notes-Python-Django-Django%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C/"><meta property="og:site_name" content="Chevalier de bronze"><meta property="og:description" content="Django数据库操作"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://sokrates.com.cn/img/og_image.png"><meta property="article:published_time" content="2022-11-30T15:10:51.338Z"><meta property="article:modified_time" content="2022-11-30T02:03:34.418Z"><meta property="article:author" content="Kawakami Ari"><meta property="article:tag" content="Python"><meta property="article:tag" content="Django"><meta property="article:tag" content="ORM"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://sokrates.com.cn/2022/11/30/Study-notes-Python-Django-Django%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C/"},"headline":"Django 数据库操作","image":["http://sokrates.com.cn/img/og_image.png"],"datePublished":"2022-11-30T15:10:51.338Z","dateModified":"2022-11-30T02:03:34.418Z","author":{"@type":"Person","name":"Kawakami Ari"},"publisher":{"@type":"Organization","name":"Chevalier de bronze","logo":{"@type":"ImageObject","url":"http://sokrates.com.cn/img/logo.png"}},"description":"Django数据库操作"}</script><link rel="canonical" href="http://sokrates.com.cn/2022/11/30/Study-notes-Python-Django-Django%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600&amp;family=Roboto+Mono"><link rel="stylesheet" href="/css/cyberpunk.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.png" alt="Chevalier de bronze" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/kawakami-araki/kawakami-araki.github.io"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2022-11-30T15:10:51.338Z" title="2022/11/30 23:10:51">2022-11-30</time>发表</span><span class="level-item"><time dateTime="2022-11-30T02:03:34.418Z" title="2022/11/30 10:03:34">2022-11-30</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Django/">Django</a></span><span class="level-item">15 分钟读完 (大约2197个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">Django 数据库操作</h1><div class="content"><h1 id="Django数据库操作"><a href="#Django数据库操作" class="headerlink" title="Django数据库操作"></a>Django数据库操作</h1><span id="more"></span>
+
+<h2 id="Django中不需要定义id字段"><a href="#Django中不需要定义id字段" class="headerlink" title="#Django中不需要定义id字段"></a>#Django中不需要定义id字段</h2><h3 id="数据库创建–基础字段"><a href="#数据库创建–基础字段" class="headerlink" title="数据库创建–基础字段:"></a>数据库创建–基础字段:</h3><ul>
+<li><p>CharField(定义一个字符串类型的字段)</p>
+<ul>
+<li>max_length=xx,  定义字符串最大长度</li>
+</ul>
+</li>
+<li><p>DateField(定义一个时间类型的字段)</p>
+<ul>
+<li>时间类型字段一共有三个,TimeField</li>
+</ul>
+</li>
+<li><p>BooleanField</p>
+</li>
+<li><p>FileField</p>
+<ul>
+<li>文件字段</li>
+</ul>
+</li>
+<li><p>TextField</p>
+<ul>
+<li>大文本字段,超过4000字符的文本使用这个字段</li>
+</ul>
+</li>
+<li><p>ImageField</p>
+<ul>
+<li>上传图片</li>
+</ul>
+</li>
+<li><p>ForeignKey  外键</p>
+<ul>
+<li><p>第一个参数为要关联的模型类</p>
+</li>
+<li><h3 id="第二个参数必须加上下面这个参数-才能保证正确"><a href="#第二个参数必须加上下面这个参数-才能保证正确" class="headerlink" title="第二个参数必须加上下面这个参数,才能保证正确"></a>第二个参数必须加上下面这个参数,才能保证正确</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">on_delete=models.CASCADE</span><br></pre></td></tr></table></figure></li>
+<li><p>在django2.0之后的版本中不在有默认的on_delete,所以这里需要手动传入这个参数</p>
+<ul>
+<li>```<br>on_delete=None,               # 删除关联表中的数据时,当前表与其关联的field的行为<pre><code>on_delete=models.CASCADE,     # 删除关联数据,与之关联也删除
+on_delete=models.DO_NOTHING,  # 删除关联数据,什么也不做
+on_delete=models.PROTECT,     # 删除关联数据,引发错误ProtectedError
+# models.ForeignKey(&#39;关联表&#39;, on_delete=models.SET_NULL, blank=True, null=True)
+on_delete=models.SET_NULL,    # 删除关联数据,与之关联的值设置为null（前提FK字段需要设置为可空,一对一同理）
+# models.ForeignKey(&#39;关联表&#39;, on_delete=models.SET_DEFAULT, default=&#39;默认值&#39;)
+on_delete=models.SET_DEFAULT, # 删除关联数据,与之关联的值设置为默认值（前提FK字段需要设置默认值,一对一同理）
+on_delete=models.SET,         # 删除关联数据,
+ a. 与之关联的值设置为指定值,设置：models.SET(值)
+ b. 与之关联的值设置为可执行对象的返回值,设置：models.SET(可执行对象)
+</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">## 字段属性</span><br><span class="line"></span><br><span class="line">- default</span><br><span class="line">- null</span><br><span class="line">  - 判断字段能不能为空</span><br><span class="line">  - 默认为false</span><br><span class="line">- primary_key</span><br><span class="line">  - 主键约束</span><br><span class="line">- Foregin_key</span><br><span class="line">  - 外键约束\</span><br><span class="line">- autoincerment</span><br><span class="line">  - 自增长</span><br><span class="line">- blank</span><br><span class="line">  - 后台出入数据时是否允许为空</span><br><span class="line">- verbose_name</span><br><span class="line">  - 设定字段在管理页面显示的名称</span><br><span class="line"></span><br><span class="line">## 插入、更新和删除</span><br><span class="line"></span><br><span class="line">#### 插入、更新</span><br><span class="line"></span><br><span class="line">​	save()</span><br><span class="line"></span><br><span class="line">#### 删除</span><br><span class="line"></span><br><span class="line">​	delete</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">------</span><br><span class="line"></span><br><span class="line">## 生成迁移文件</span><br><span class="line"></span><br><span class="line">- ```python</span><br><span class="line">  python manage.py makemigrations</span><br><span class="line">  #生成迁移脚本</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>```python<br>python manage.py migrate<br>#将迁移脚本映射到数据库之中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">------</span><br><span class="line"></span><br><span class="line">## 修改Django数据库默认配置:</span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">#修改setting文件中的database中的参数</span><br><span class="line">DATABASES = &#123;</span><br><span class="line">    &#x27;default&#x27;: &#123;</span><br><span class="line">        &#x27;ENGINE&#x27;: &#x27;django.db.backends.mysql&#x27;,</span><br><span class="line">        # &#x27;NAME&#x27;: os.path.join(BASE_DIR, &#x27;db.sqlite3&#x27;),</span><br><span class="line">        &#x27;NAME&#x27;: &#x27;django_demo&#x27;,#数据库名称,需要手动创建好数据库</span><br><span class="line">        &#x27;USER&#x27;: &quot;root&quot;,	#用户名,默认为root</span><br><span class="line">        &#x27;PASSWORD&#x27;: &#x27;000000&#x27;,#mysql密码</span><br><span class="line">        &#x27;HOST&#x27;: &#x27;localhost&#x27;,#数据库地址,一般为本机127.0.0.1,通localhost</span><br><span class="line">        &#x27;PORT&#x27;: &#x27;3306&#x27;#MySQL数据库端口号.默认3306</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h2 id="运行整个项目"><a href="#运行整个项目" class="headerlink" title="运行整个项目:"></a>运行整个项目:</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py runserver</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="通过models文件在数据库中添加数据"><a href="#通过models文件在数据库中添加数据" class="headerlink" title="通过models文件在数据库中添加数据"></a>通过models文件在数据库中添加数据</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">python manage.py shell</span><br><span class="line"><span class="comment">#进入交互模式</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> 模块名.models <span class="keyword">import</span> 模型类名</span><br><span class="line"><span class="keyword">from</span> first.models <span class="keyword">import</span> BookInfo</span><br><span class="line">b = BookInfo()</span><br><span class="line">b.btitle = <span class="string">&#x27;天龙八部&#x27;</span></span><br><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> date</span><br><span class="line">b.bpub_data = date(<span class="number">1998</span>,<span class="number">3</span>,<span class="number">22</span>)</span><br><span class="line">b.save()</span><br></pre></td></tr></table></figure>
+
+<h2 id="通过模型类从数据库中获取对应的数据"><a href="#通过模型类从数据库中获取对应的数据" class="headerlink" title="通过模型类从数据库中获取对应的数据"></a>通过模型类从数据库中获取对应的数据</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b1 = BookInfo.objects.get(<span class="built_in">id</span>=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>#通过模型对象BookInfo的objects方法的get方法获取满足对应条件的字段 </p>
+<p>type(b1)</p>
+<p>#返回对象是First.models.BookInfo</p>
+<h3 id="修改表中数据"><a href="#修改表中数据" class="headerlink" title="修改表中数据:"></a>修改表中数据:</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b1.btitle = &#x27;新的数据&#x27;</span><br><span class="line">b1.save()</span><br></pre></td></tr></table></figure>
+
+<p>从根本上来说,修改数据仅仅只是拿到数据之后重新赋值,然后进行提交而已</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b1.delete()</span><br></pre></td></tr></table></figure>
+
+<p>从数据库中删除这条数据</p>
+<hr>
+<h2 id="外键查询"><a href="#外键查询" class="headerlink" title="外键查询:"></a>外键查询:</h2><ul>
+<li><p>ForeignKey设置外键</p>
+</li>
+<li><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create your models here.</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookInfo</span>(<span class="params">models.Model</span>):</span></span><br><span class="line">    <span class="comment">#书名</span></span><br><span class="line">    btitle = models.CharField(max_length=<span class="number">10</span>)</span><br><span class="line">    <span class="comment">#上架时间</span></span><br><span class="line">    bpub_data = models.DateField()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HeroInfo</span>(<span class="params">models.Model</span>):</span></span><br><span class="line">    <span class="comment">#人物名</span></span><br><span class="line">    hname = models.CharField(max_length=<span class="number">10</span>)</span><br><span class="line">    <span class="comment">#人物性别,true为男,false为女</span></span><br><span class="line">    hgender = models.BooleanField(default=<span class="literal">False</span>)</span><br><span class="line">    <span class="comment">#简介</span></span><br><span class="line">    hcomment = models.CharField(max_length=<span class="number">300</span>)</span><br><span class="line">    <span class="comment">#人物所属书籍,一对多关系</span></span><br><span class="line">    <span class="comment">#设置外键</span></span><br><span class="line">    hbook = models.ForeignKey(<span class="string">&#x27;BookInfo&#x27;</span>,on_delete=models.CASCADE)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>外键创建好之后的字段名为设定好的models模型里面的外键字段加上_id,这个id和另一个表的id对照</p>
+</li>
+<li><pre><code class="python">b = BookInfo()
+b.btitle = &#39;天龙八部&#39;
+from datetime import date
+b.bpub_data = date(1998,2,33)
+b.save()
+#之后添加HeroInfo表的数据
+h = HeroInfo()
+h.hname = &#39;段誉&#39;
+h.hgender = True
+#外键字段赋值为已经创建好的与这条数据关联的bookinfo表对象
+#通过这个字段可以查询到对应表的信息
+h.hbook = b
+
+###################################################################
+#一对多的情况下查询一的信息
+&gt;&gt;&gt;h.hbook.btitle
+&gt;&gt;&gt;&#39;天龙八部&#39;
+&gt;&gt;&gt;h.hbook.bpub_data
+&gt;&gt;&gt;datetime.date(1998,2,33)
+#一对多查询所属信息
+&gt;&gt;&gt;b.heroinfo_set.all()
+#返回的结果是一个集合,里面以列表形式放置了所有对应的数据
+&gt;&gt;&gt; &lt;QuerySet [&lt;HeroInfo: HeroInfo object (1)&gt;]&gt;
+&gt;&gt;&gt;b.heroinfo_set.first()
+#返回的结果是对应数据的第一条
+&gt;&gt;&gt; &lt;HeroInfo: HeroInfo object (1)&gt;
+#通过将这一条数据赋值之后可以继续进行一些查询
+&gt;&gt;&gt;b1 = b.heroinfo_set.first()
+&gt;&gt;&gt;b1.hname
+&gt;&gt;&gt;&quot;段誉&quot;
+######################################################
+#查询全部数据
+&gt;&gt;&gt; BookInfo.objects.all()
+&gt;&gt;&gt; HeroInfo.objects.all()
+#模型类名.objects.all()
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="数据库查询语句"><a href="#数据库查询语句" class="headerlink" title="数据库查询语句"></a>数据库查询语句</h2><h3 id="条件查询"><a href="#条件查询" class="headerlink" title="条件查询"></a>条件查询</h3><ul>
+<li><p>all</p>
+<ul>
+<li>all返回的是一个数据集合</li>
+<li>此返回数据可以进行遍历</li>
+</ul>
+</li>
+<li><p>filter</p>
+<ul>
+<li>返回的结果也是一个集合,可以遍历</li>
+<li>属性名__exact = 1<ul>
+<li>判断是否相等</li>
+<li>此项属性等同于id = 1</li>
+</ul>
+</li>
+<li>属性名__contains<ul>
+<li>查询包含某个字符的数据</li>
+</ul>
+</li>
+<li>属性名__endswith<ul>
+<li>查询以某字符结尾的数据</li>
+<li>以某字符串结尾</li>
+</ul>
+</li>
+<li>属性名__startswith<ul>
+<li>以某字符串开头</li>
+</ul>
+</li>
+<li>属性名__isnull<ul>
+<li>查询某字段为空或者不为空的数据</li>
+<li>属性名_isnull=false    不为空</li>
+<li>属性名__isnull=true   为空</li>
+</ul>
+</li>
+<li>属性名__in = [1,2,3]<ul>
+<li>查询目标字段再此列表元素的范围内的数据</li>
+</ul>
+</li>
+<li>属性名__gt = 3(gt为大于)<ul>
+<li>等同于                属性名 &gt; 3</li>
+</ul>
+</li>
+<li>属性名__lt = 3(lt为小于)<ul>
+<li>等同于                属性名 &lt; 3</li>
+</ul>
+</li>
+<li>属性名__gte = 3(gte为大于等于)<ul>
+<li>等同于                属性名 &gt;= 3</li>
+</ul>
+</li>
+<li>属性名__lte = 3(lte为小于等于)<ul>
+<li>等同于                属性名 &lt;= 3</li>
+</ul>
+</li>
+<li>属性名__year<ul>
+<li>bpub_date__year = 1980</li>
+<li>查询1980年之后的数据</li>
+<li>查询时间信息还可以使用上面的大于等于的方法<ul>
+<li>bpub_date_gt = date(1998,1,1)</li>
+<li>查询在1998年1月1日之后的数据</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>exclude</p>
+<ul>
+<li><p>返回的结果也是一个集合,可以遍历</p>
+</li>
+<li><p>查询不满足某个条件的数据</p>
+</li>
+</ul>
+</li>
+<li><p>order_by排序</p>
+<ul>
+<li><p>返回的结果也是一个集合,可以遍历</p>
+</li>
+<li><p>排序字段一般是放在条件查询之后进行的</p>
+</li>
+<li><p>BackInfo.objects.all().order_by(‘id’)</p>
+<ul>
+<li>默认排序方式为升序排列</li>
+</ul>
+</li>
+<li><p>BackInfo.objects.all().order_by(‘-id’)</p>
+<ul>
+<li>在前面加个-将会进行降序排列</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="多条件查询"><a href="#多条件查询" class="headerlink" title="多条件查询"></a>多条件查询</h3><ul>
+<li>两个条件并存</li>
+<li>与&amp;<ul>
+<li>filter(id_gt=1,age_gt=10)<ul>
+<li>id大于1并且age大于10</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>或  |<ul>
+<li>这个条件查询需要导入一个新的模块</li>
+<li>from django.db.models import Q</li>
+<li>filter(Q(id=1) | Q(age=15))</li>
+<li>创建新的Q对象,作为或条件的单位,</li>
+</ul>
+</li>
+<li>查询条件为一个字段的数值大于另一个字段的数据<ul>
+<li>如,查询一本书的阅读量大于评论量的的数据</li>
+<li>这个时候需要导入一个新的模块F<ul>
+<li>from django.db.models import F</li>
+<li>使用f模块构造对应字段的对象,并将这个对象作为条件进行查询</li>
+<li>BookInfo.objects.filter(bread_gt=F(bcomment))</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="聚合函数"><a href="#聚合函数" class="headerlink" title="聚合函数."></a>聚合函数.</h3><h5 id="—-—-聚合操作的关键字"><a href="#—-—-聚合操作的关键字" class="headerlink" title="—-—-聚合操作的关键字:"></a>—-—-聚合操作的关键字:</h5><p>​    <strong>aggregate</strong></p>
+<p>​    查询时所使用的模块都在django.db.models这个包里面</p>
+<h4 id="聚合函数总览"><a href="#聚合函数总览" class="headerlink" title="聚合函数总览"></a>聚合函数总览</h4><ul>
+<li>count该字段的总个数</li>
+<li>max最大数值</li>
+<li>min最小数值</li>
+<li>sum该字段数值的和</li>
+<li>avg平均数值</li>
+</ul>
+<h4 id="聚合函数使用时需要导入模块"><a href="#聚合函数使用时需要导入模块" class="headerlink" title="聚合函数使用时需要导入模块"></a>聚合函数使用时需要导入模块</h4><ol>
+<li>​    <u>f<strong>rom django.db.models import Count,Max,Min,Avg,Sum</strong></u></li>
+<li>​    <u><strong>这五个聚合函数需要从django.db.models里面引入进来</strong></u></li>
+<li>​    <u><strong>BookInfo.objects.aggregate(Sum(‘bread’))</strong></u></li>
+<li>​    <u><strong>模型类名.bojects.aggregate(聚合函数(字段名))</strong></u></li>
+<li>​    <u><strong>当不加查询条件时默认为all,也就是说,all时可以省略的</u></strong></li>
+</ol>
+<h5 id="当进行聚合之后-返回的值是一个字典-书写形式为-key-聚合的属性名-聚合方式-value-聚合的结果"><a href="#当进行聚合之后-返回的值是一个字典-书写形式为-key-聚合的属性名-聚合方式-value-聚合的结果" class="headerlink" title="当进行聚合之后,返回的值是一个字典,书写形式为,key = 聚合的属性名__聚合方式      ,value = 聚合的结果"></a>当进行聚合之后,返回的值是一个字典,书写形式为,key = 聚合的属性名__聚合方式      ,value = 聚合的结果</h5><h4 id="聚合函数另一种用法"><a href="#聚合函数另一种用法" class="headerlink" title="聚合函数另一种用法:"></a>聚合函数另一种用法:</h4><p>在已经进行过条件查询的情况下,直接使用小写的.count()得到的结果时一个数值,这个数值是已经查询到的数据的总数</p>
+<p>但是因为条件查询完毕之后获取的是数据集合,所以这个数据集合是没有其他的属性的,他唯一适用的聚合函数只有一个,那就是计算总数的**<u><code>count</code></u>**</p>
+<p>注意,在所有返回的为数据集合的查询语句后面,以上的所有函数都是可以用的,你可以继续在后面使用分类,</p>
+<p>所有结果为查询集的结果都是可以进行切片的,[:]</p>
+<p>注意,这个切片使用的下标是不允许使用负数的</p>
+<p>切片之后的结果依然是一个查询集,可以使用get()方法进行查询</p>
+<p>exists()   判断这个查询集中是否有数据,有返回True,没有返回False</p>
+<p>existe     相当于查看这个判断并展示这个查询及的全部数据</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Django 数据库操作</p><p><a href="http://sokrates.com.cn/2022/11/30/Study-notes-Python-Django-Django数据库操作/">http://sokrates.com.cn/2022/11/30/Study-notes-Python-Django-Django数据库操作/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>Kawakami Ari</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2022-11-30</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2022-11-30</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Python/">Python</a><a class="link-muted mr-2" rel="tag" href="/tags/Django/">Django</a><a class="link-muted mr-2" rel="tag" href="/tags/ORM/">ORM</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://ppoffice.github.io/hexo-theme-icarus/categories/Plugins/Share/" defer></script></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3><div class="buttons is-centered"><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>支付宝</span><span class="qrcode"><img src="/img/alipay.png" alt="支付宝"></span></a><a class="button donate" data-type="paypal" onclick="document.getElementById(&#039;paypal-donate-form&#039;).submit()"><span class="icon is-small"><i class="fab fa-paypal"></i></span><span>Paypal</span></a><form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" rel="noopener" id="paypal-donate-form"><input type="hidden" name="cmd" value="_donations"><input type="hidden" name="business" value="kawakami-araki@foxmail.com"><input type="hidden" name="currency_code" value="USD"></form><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>微信</span><span class="qrcode"><img src="/img/weixin.png" alt="微信"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2022/11/30/Study-notes-Python-Django-Django%E6%A8%A1%E5%9E%8B%E7%AE%A1%E7%90%86%E5%99%A8/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Django 模型管理器</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/11/30/Study-notes-Python-Django-Django%E6%96%87%E4%BB%B6%E5%88%9D%E5%88%9B/"><span class="level-item">Django 基础内容</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/author.jpg" alt="Kawakami Ari"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Kawakami Ari</p><p class="is-size-6 is-block">Otaku</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">95</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">33</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/kawakami-araki/" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/kawakami-araki"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a></div></div></div><!--!--><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/C/"><span class="level-start"><span class="level-item">C++</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/categories/Django/"><span class="level-start"><span class="level-item">Django</span></span><span class="level-end"><span class="level-item tag">21</span></span></a></li><li><a class="level is-mobile" href="/categories/Django-DRF/"><span class="level-start"><span class="level-item">Django DRF</span></span><span class="level-end"><span class="level-item tag">8</span></span></a></li><li><a class="level is-mobile" href="/categories/Hexo/"><span class="level-start"><span class="level-item">Hexo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/JavaScript/"><span class="level-start"><span class="level-item">JavaScript</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/Python/"><span class="level-start"><span class="level-item">Python</span></span><span class="level-end"><span class="level-item tag">40</span></span></a></li><li><a class="level is-mobile" href="/categories/VTD/"><span class="level-start"><span class="level-item">VTD</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/scala/"><span class="level-start"><span class="level-item">scala</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%97%A5%E5%B8%B8/"><span class="level-start"><span class="level-item">日常</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%B0%B8%E5%8A%AB%E6%97%A0%E9%97%B4%E8%8B%B1%E9%9B%84%E8%AE%BE%E8%AE%A1%E6%B4%BB%E5%8A%A8/"><span class="level-start"><span class="level-item">永劫无间英雄设计活动</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile" href="/categories/%E8%8D%89%E7%A8%BF%E7%AE%B1/"><span class="level-start"><span class="level-item">草稿箱</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile" href="/categories/%E8%AE%BE%E8%AE%A1%E7%A8%BF/"><span class="level-start"><span class="level-item">设计稿</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Big-Data/"><span class="tag">Big Data</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/C/"><span class="tag">C++</span><span class="tag">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/DRF/"><span class="tag">DRF</span><span class="tag">8</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Django/"><span class="tag">Django</span><span class="tag">29</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Flask/"><span class="tag">Flask</span><span class="tag">16</span></a></div><div class="control"><a class="tags has-addons" href="/tags/GIT/"><span class="tag">GIT</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/JavaScript/"><span class="tag">JavaScript</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LOL/"><span class="tag">LOL</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/MD5/"><span class="tag">MD5</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/MongoDB/"><span class="tag">MongoDB</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Numpy/"><span class="tag">Numpy</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/ORM/"><span class="tag">ORM</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Pandas/"><span class="tag">Pandas</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Python/"><span class="tag">Python</span><span class="tag">68</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Redis/"><span class="tag">Redis</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Scala/"><span class="tag">Scala</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Spark/"><span class="tag">Spark</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Spider/"><span class="tag">Spider</span><span class="tag">16</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Vue/"><span class="tag">Vue</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Warframe/"><span class="tag">Warframe</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/ajax/"><span class="tag">ajax</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/matplotlib/"><span class="tag">matplotlib</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%9F%BA%E7%A1%80/"><span class="tag">基础</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%BB%E6%83%B3/"><span class="tag">幻想</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%8A%80%E6%9C%AF/"><span class="tag">技术</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%99%E7%A8%8B/"><span class="tag">教程</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%98%9F%E9%99%85%E6%88%98%E7%94%B2/"><span class="tag">星际战甲</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B0%B8%E5%8A%AB%E6%97%A0%E9%97%B4/"><span class="tag">永劫无间</span><span class="tag">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B8%B8%E6%88%8F/"><span class="tag">游戏</span><span class="tag">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%81%B5%E6%84%9F/"><span class="tag">灵感</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%B7%A8%E5%9F%9F/"><span class="tag">跨域</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%BD%A6%E4%B8%87/"><span class="tag">车万</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%9A%8F%E7%AC%94/"><span class="tag">随笔</span><span class="tag">2</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen is-sticky"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3 is-sticky"><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://blog.csdn.net/weixin_45707730?spm=1000.2115.3001.5343" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Tyt</span></span><span class="level-right"><span class="level-item tag">blog.csdn.net</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-11-30T15:10:51.393Z">2022-11-30</time></p><p class="title"><a href="/2022/11/30/Study-notes-VTD-VTD%E8%B7%AF%E7%BD%91%E7%BC%96%E8%BE%91%E5%99%A8/">VTD路网编辑器相关</a></p><p class="categories"><a href="/categories/VTD/">VTD</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-11-30T15:10:51.393Z">2022-11-30</time></p><p class="title"><a href="/2022/11/30/Study-notes-VTD-VTD%E5%AE%89%E8%A3%85/">VTD(Virtual Test Drive)相关安装流程以及注意事项</a></p><p class="categories"><a href="/categories/VTD/">VTD</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-11-30T15:10:51.391Z">2022-11-30</time></p><p class="title"><a href="/2022/11/30/Study-notes-spark%E9%A1%B9%E7%9B%AE%E7%9B%B8%E5%85%B3%E6%B3%A8%E9%87%8A/">关于一个spark项目的详细拆分解析</a></p><p class="categories"><a href="/categories/scala/">scala</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-11-30T15:10:51.390Z">2022-11-30</time></p><p class="title"><a href="/2022/11/30/Study-notes-Python-Spider-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%8D%8F%E7%A8%8B/">进程线程协程与爬虫</a></p><p class="categories"><a href="/categories/Python/">Python</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-11-30T15:10:51.389Z">2022-11-30</time></p><p class="title"><a href="/2022/11/30/Study-notes-Python-Spider-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%95%B0%E6%8D%AE%E7%88%AC%E5%8F%96%E4%B8%8E%E8%A7%A3%E6%9E%90/">移动端数据爬取</a></p><p class="categories"><a href="/categories/Python/">Python</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/11/"><span class="level-start"><span class="level-item">十一月 2022</span></span><span class="level-end"><span class="level-item tag">95</span></span></a></li></ul></div></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.png" alt="Chevalier de bronze" height="28"></a><p class="is-size-7"><span>&copy; 2022 Kawakami Ari</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Scrayp详解 - Chevalier de bronze</title><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="black"><meta name="application-name" content="Little Blog"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="msapplication-TileColor" content="black"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Little Blog"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="scrapy:"><meta property="og:type" content="blog"><meta property="og:title" content="Scrayp详解"><meta property="og:url" content="http://sokrates.com.cn/2022/11/30/Study-notes-Python-Spider-scrapy%E8%AF%A6%E8%A7%A3/"><meta property="og:site_name" content="Chevalier de bronze"><meta property="og:description" content="scrapy:"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://sokrates.com.cn/img/images/R-C.png"><meta property="article:published_time" content="2022-11-30T15:10:51.380Z"><meta property="article:modified_time" content="2022-11-29T08:23:32.857Z"><meta property="article:author" content="Kawakami Ari"><meta property="article:tag" content="Python"><meta property="article:tag" content="Spider"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/images/R-C.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://sokrates.com.cn/2022/11/30/Study-notes-Python-Spider-scrapy%E8%AF%A6%E8%A7%A3/"},"headline":"Scrayp详解","image":["http://sokrates.com.cn/img/images/R-C.png"],"datePublished":"2022-11-30T15:10:51.380Z","dateModified":"2022-11-29T08:23:32.857Z","author":{"@type":"Person","name":"Kawakami Ari"},"publisher":{"@type":"Organization","name":"Chevalier de bronze","logo":{"@type":"ImageObject","url":"http://sokrates.com.cn/img/logo.png"}},"description":"scrapy:"}</script><link rel="canonical" href="http://sokrates.com.cn/2022/11/30/Study-notes-Python-Spider-scrapy%E8%AF%A6%E8%A7%A3/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600&amp;family=Roboto+Mono"><link rel="stylesheet" href="/css/cyberpunk.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.png" alt="Chevalier de bronze" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/kawakami-araki/kawakami-araki.github.io"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="/img/images/R-C.png" alt="Scrayp详解"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2022-11-30T15:10:51.380Z" title="2022/11/30 23:10:51">2022-11-30</time>发表</span><span class="level-item"><time dateTime="2022-11-29T08:23:32.857Z" title="2022/11/29 16:23:32">2022-11-29</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Python/">Python</a></span><span class="level-item">29 分钟读完 (大约4362个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">Scrayp详解</h1><div class="content"><h1 id="scrapy"><a href="#scrapy" class="headerlink" title="scrapy:"></a>scrapy:</h1><span id="more"></span>
+<ul>
+<li><p>什么是框架?</p>
+<ul>
+<li>继承了各种功能且具有很强通用性(可以被应用在各种不同的需求中)的一个项目模板</li>
+<li>我们需要做的就是学习怎么使用这些框架的功能</li>
+</ul>
+</li>
+<li><p>scrapy框架集成的功能有哪些?</p>
+<ul>
+<li>高性能的数据解析操作</li>
+<li>高性能的数据下载操作</li>
+<li>持久化数据存储</li>
+</ul>
+</li>
+<li><p>scrapy通常只用于get请求,并不适用于post请求的模拟登陆</p>
+</li>
+<li><p>scrapy环境安装</p>
+<ol>
+<li>pip install wheel</li>
+<li>pip install twisted<ul>
+<li><a target="_blank" rel="noopener" href="https://pypi.org/project/Twisted/#files">twisted下载</a></li>
+</ul>
+</li>
+<li>pip install pywin32</li>
+<li>pip install scrapy</li>
+</ol>
+</li>
+<li><p>开始创建scrapy工程</p>
+<ul>
+<li>进入终端输入指令创建新的scrapy工程</li>
+<li>‘scrapy startproject projectname’</li>
+<li>按照指令创建新的爬虫文件 </li>
+<li>scrapy genspider spiderName <a target="_blank" rel="noopener" href="http://www.xxx.com/">www.xxx.com</a></li>
+<li>启动爬虫程序<ul>
+<li>scrapy爬虫不能直接运行,</li>
+<li>在命令窗口中输入指令</li>
+<li>scrapy crawl spiderName<ul>
+<li>scrapy crawl spiderName –nolog</li>
+<li>运行时不输出日志信息</li>
+<li>在setting文件中添加配置</li>
+<li>LOG_LEVEL= ‘ERROR’’</li>
+<li>当发生错误时,将错误日志输出,方便调试</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>scrapy工程设置–—–-setting</p>
+<ul>
+<li>User_Agent    这里设置的是爬虫的请求头</li>
+<li>ROBOTSTXT_OBEY = True   这里设置的是robots协议,当值为True时,爬虫将会在运行时优先查看robots协议,如果协议不允许将不会进行爬取</li>
+</ul>
+</li>
+<li><p>scrapy工程使用</p>
+<ul>
+<li><p>构建解析</p>
+</li>
+<li><p>```python</p>
+<h1 id="coding-utf-8"><a href="#coding-utf-8" class="headerlink" title="-- coding: utf-8 --"></a>-<em>- coding: utf-8 -</em>-</h1><p>import scrapy<br>class NewSpiderSpider(scrapy.Spider):</p>
+<pre><code># 爬虫文件的名称,相当于爬虫文件的唯一标识
+name = &#39;💀&#39;
+# 循序的域名, 通常情况下不会使用
+# allowed_domains = [&#39;www.baidu.com&#39;]
+# 起始的url列表, scrapy将会对列表中的url自动进行请求发送
+start_urls = [&#39;http://www.budejie.com/&#39;]
+
+def parse(self, response):
+    # 在scrapy中,数据解析不需要手动导入etree来进行,相对的,这里面集成了etree 的功能,也就是说,我们可以直接使用scrapy的集成来达到我们进行数据解析的目标
+    # 这个功能的使用方式如下
+    res = response.xpath(&#39;//div[@class=&quot;j-r-list-c-desc&quot;]/a/text()&#39;).extract()
+    # extract方法,提取获取到的selected对象中的data数据,当对象为单个对象的时候,获取到的对象就是单个的字符串,
+    # 当提取到的selected对象为list对象时,获取到的数据也会自动变成一个列表,并不需要循环遍历selected列表来进行提取
+    for i in res:
+        print(i)
+</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- scrapy持久化存储</span><br><span class="line"></span><br><span class="line">  - 基于终端窗口的持久化存储</span><br><span class="line"></span><br><span class="line">    - 特性:只可以将parse方法的返回值写入到本地的磁盘文件中</span><br><span class="line"></span><br><span class="line">    - 指令: scrapy crawl spiderName -o filePath</span><br><span class="line"></span><br><span class="line">    - ```python</span><br><span class="line">          def parse(self, response):</span><br><span class="line">              li_list = response.xpath(&#x27;//div[@class=&quot;j-r-list&quot;]/ul/li&#x27;)</span><br><span class="line">              all_data = []</span><br><span class="line">              for li in li_list:</span><br><span class="line">                  author = li.xpath(&#x27;./div[1]/div[2]/a/text()&#x27;).extract()[0]</span><br><span class="line">                  content = li.xpath(&#x27;./div[2]/div[1]/a/text()&#x27;).extract()[0]</span><br><span class="line">                  dic = &#123;</span><br><span class="line">                      &#x27;Author&#x27;: author,</span><br><span class="line">                      &#x27;Content&#x27;: content</span><br><span class="line">                  &#125;</span><br><span class="line">                  all_data.append(dic)</span><br><span class="line">              return all_data</span><br><span class="line">      # scrapy 将会对parse的返回值进行处理,并预置了内部的持久化存储模块.这个持久化存储基于命令终端运行,该选项不支持txt文件存储,目前仅支持(&#x27;json&#x27;, &#x27;jsonlines&#x27;, &#x27;jl&#x27;, &#x27;csv&#x27;, &#x27;xml&#x27;, &#x27;marshal&#x27;, &#x27;pickle&#x27;)这七种文件</span><br></pre></td></tr></table></figure>
+
+<p>- </p>
+</li>
+<li><p>基于管道的持久化存储</p>
+<ul>
+<li><p>管道话存储需要使用scrapy中封存的一些方法,同时需要进行一些处理,这样的存储方式支持txt文档存储</p>
+</li>
+<li><p>管道文件存储示例:</p>
+</li>
+<li><p>```python<br>class FirstblodPipeline(object):</p>
+<pre><code>fp = None
+# 设定在管道运行开始之前优先运行的代码
+def open_spider(self, spider):
+    print(&#39;爬虫开始运行~~~~~~~&#39;)
+    # 通过在管道运行开始之前打开文件的形式来确保这个文件每次只需要打开一次
+    self.fp = open(&#39;./firstBlod/spiders/all_data.txt&#39;, &#39;w&#39;, encoding=&#39;utf-8&#39;)
+
+# 当数据被提交时执行的代码,在这里进行数据持久化存储
+def process_item(self, item, spider):
+    author = item[&#39;author&#39;]
+    content = item[&#39;content&#39;]
+    # 调用已经打开的文件,并在里面进行写入操作
+    self.fp.write(author + &#39;:&#39; + content + &#39;\n&#39;)
+    # 将item转交给下一个管道类
+    return item
+# 当管道关闭时执行的代码
+def close_spider(self, spider):
+    print(&#39;爬虫结束运行~~~~~~~&#39;)
+    # 在代码整体运行结束的时候,关闭打开的文件
+    self.fp.close()
+</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- item文件对象实例</span><br><span class="line"></span><br><span class="line">- ```python</span><br><span class="line">  class FirstblodItem(scrapy.Item):</span><br><span class="line">      # define the fields for your item here like:</span><br><span class="line">      # name = scrapy.Field()</span><br><span class="line">      # 构建新的item对象中的参数</span><br><span class="line">      # 格式为    name = scrapy.Field()</span><br><span class="line">      # 使用field文件格式的时候,兼容几乎所有的文件类型</span><br><span class="line">      # 包括但不仅限于   列表,元组,字典,字符串,数字,二进制流等各种各样的形式</span><br><span class="line">      author = scrapy.Field()</span><br><span class="line">      content = scrapy.Field()</span><br></pre></td></tr></table></figure></li>
+<li><p>settings文件实例</p>
+</li>
+<li><p>```python</p>
+<h1 id="Configure-item-pipelines"><a href="#Configure-item-pipelines" class="headerlink" title="Configure item pipelines"></a>Configure item pipelines</h1><h1 id="See-https-docs-scrapy-org-en-latest-topics-item-pipeline-html"><a href="#See-https-docs-scrapy-org-en-latest-topics-item-pipeline-html" class="headerlink" title="See https://docs.scrapy.org/en/latest/topics/item-pipeline.html"></a>See <a target="_blank" rel="noopener" href="https://docs.scrapy.org/en/latest/topics/item-pipeline.html">https://docs.scrapy.org/en/latest/topics/item-pipeline.html</a></h1><p>ITEM_PIPELINES = {<br>   ‘firstBlod.pipelines.FirstblodPipeline’: 300,</p>
+<pre><code># 管道对象的名字,后面的数值为管道优先值
+# 优先值高的将会优先执行
+# 数值越低优先值越高
+</code></pre>
+<p>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 找到管道相关代码进行激活</span><br><span class="line"></span><br><span class="line">- 在爬虫文件中进行使用</span><br><span class="line"></span><br><span class="line">- ```python</span><br><span class="line">  import scrapy</span><br><span class="line">  from firstBlod.items import FirstblodItem</span><br><span class="line">  # 导入item设定类</span><br><span class="line">  class NewSpiderSpider(scrapy.Spider):</span><br><span class="line">      name = &#x27;💀&#x27;</span><br><span class="line">      start_urls = [&#x27;http://www.budejie.com/&#x27;]</span><br><span class="line">  </span><br><span class="line">      def parse(self, response):</span><br><span class="line">          li_list = response.xpath(&#x27;//div[@class=&quot;j-r-list&quot;]/ul/li&#x27;)</span><br><span class="line">          # all_data = []</span><br><span class="line">          for li in li_list:</span><br><span class="line">              author = li.xpath(&#x27;./div[1]/div[2]/a/text()&#x27;).extract()[0]</span><br><span class="line">              content = li.xpath(&#x27;./div[2]/div[1]/a/text()&#x27;).extract()[0]</span><br><span class="line">              item = FirstblodItem()</span><br><span class="line">              # 实例化item对象</span><br><span class="line">              item[&#x27;author&#x27;] = author</span><br><span class="line">              item[&#x27;content&#x27;] = content</span><br><span class="line">              # item使用方法和字典类似</span><br><span class="line">              # 使用yield方法返回封装完成的item对象</span><br><span class="line">              # 当使用yield返回的时候,将会自动将item传输到管道对应的接受类中,进行处理并持久化存储</span><br><span class="line">              yield item</span><br></pre></td></tr></table></figure></li>
+<li><p>将上述条件准备完毕之后,就可以进行数据的持久化存储了</p>
+</li>
+<li><p>当然,也不一定非要存储到文件中去,毕竟还有一些涉及到数据库的存储,都可以放到这个管道中来进行</p>
+</li>
+<li><p>也就是,管道文件中的一个管道类负责一种持久化存储的方案</p>
+</li>
+<li><p>item提交的时候将会把item交给优先级最高的管道类</p>
+</li>
+<li><p>在管道类中,return item的作用是将item转交给下一个管道类</p>
+</li>
+<li><p>双管道类写法以及Mysql数据库写入</p>
+</li>
+<li><p>```python<br>class MysqlPip(object):</p>
+<pre><code>conn = None
+cursor = None
+
+# 设定在管道运行开始之前优先运行的代码
+def open_spider(self, spider):
+    # 通过在管道运行开始之前打开文件的形式来确保这个文件每次只需要打开一次
+    print(&#39;爬虫2开始运行~~~~~~~&#39;)
+    # 建立数据库游标
+    self.conn = pymysql.Connect(host=&#39;127.0.0.1&#39;,port=3306,user=&#39;root&#39;,password=&#39;000000&#39;,db=&#39;spider&#39;,charset=&#39;utf8&#39;)
+    print(self.conn)
+# 当数据被提交时执行的代码,在这里进行数据持久化存储
+def process_item(self, item, spider):
+    author = item[&#39;author&#39;]
+    content = item[&#39;content&#39;]
+    sql = &#39;insert into bs values (&quot;%s&quot;,&quot;%s&quot;)&#39;% (author,content)
+    print(sql)
+    self.cursor = self.conn.cursor()
+    try:
+        self.cursor.execute(sql)
+        self.conn.commit()
+    except Exception as e:
+        print(e)
+        self.conn.rollback()
+    print(&#39;----------------------------------------------------------------------------&#39;)
+    return item
+def close_spider(self, spider):
+    print(&#39;爬虫2结束运行~~~~~~~&#39;)
+    self.cursor.close()
+    self.conn.close()
+</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 手动发送请求:</span><br><span class="line"></span><br><span class="line">  - 手动发送get请求</span><br><span class="line"></span><br><span class="line">    - 应用场景:   请求同一个主页面下的多个页面</span><br><span class="line"></span><br><span class="line">    - 代码</span><br><span class="line"></span><br><span class="line">      ```python</span><br><span class="line">      # -*- coding: utf-8 -*-</span><br><span class="line">      import scrapy</span><br><span class="line">      from firstBlod.items import FirstblodItem</span><br><span class="line">      </span><br><span class="line">      class NewSpiderSpider(scrapy.Spider):</span><br><span class="line">          # 爬虫文件的名称,相当于爬虫文件的唯一标识</span><br><span class="line">          name = &#x27;new_spider&#x27;</span><br><span class="line">          # 循序的域名, 通常情况下不会使用</span><br><span class="line">          # allowed_domains = [&#x27;www.baidu.com&#x27;]</span><br><span class="line">          # 起始的url列表, scrapy将会对列表中的url自动进行请求发送</span><br><span class="line">          start_urls = [</span><br><span class="line">              &#x27;https://www.zhipin.com/job_detail/?query=python&amp;city=101010100&amp;industry=&amp;position=&#x27;,</span><br><span class="line">              ]</span><br><span class="line">          # 设置基本的url模板</span><br><span class="line">          url = &#x27;https://www.zhipin.com/c101010100/?query=python&amp;page=%d&amp;ka=page-%d&#x27;</span><br><span class="line">          # 记录页数</span><br><span class="line">          page_name = 1</span><br><span class="line">      </span><br><span class="line">          def parse(self, response):</span><br><span class="line">              li_list = response.xpath(&#x27;//div[@class=&quot;job-list&quot;]&#x27;)</span><br><span class="line">              print(li_list)</span><br><span class="line">              # all_data = []</span><br><span class="line">              for li in li_list:</span><br><span class="line">                  # 职位名称</span><br><span class="line">                  Job_title = li.xpath(&#x27;./div/div[1]/h3/a/div[1]/text()&#x27;).extract()[0]</span><br><span class="line">                  # 公司名称</span><br><span class="line">                  Corporate_name = li.xpath(&#x27;./div/div[1]/a/text()&#x27;).extract()[0]</span><br><span class="line">                  # 地址</span><br><span class="line">                  all_address = li.xpath(&#x27;./div/div[1]/p//text()&#x27;).extract()[0]</span><br><span class="line">                  # 经验 experience</span><br><span class="line">                  # address,experience,Education = all_address.split(&#x27;|&#x27;)</span><br><span class="line">                  #学历 Education</span><br><span class="line">                  # dic = &#123;</span><br><span class="line">                  #     &#x27;Author&#x27;: author,</span><br><span class="line">                  #     &#x27;Content&#x27;: content</span><br><span class="line">                  # &#125;</span><br><span class="line">                  # all_data.append(dic)</span><br><span class="line">                  item = FirstblodItem()</span><br><span class="line">                  item[&#x27;Job_title&#x27;] = Job_title</span><br><span class="line">                  item[&#x27;Corporate_name&#x27;] = Corporate_name</span><br><span class="line">                  yield item</span><br><span class="line">              # 确定当前页数,</span><br><span class="line">              if self.page_name &lt;= 5:</span><br><span class="line">                  self.page_name += 1</span><br><span class="line">                  # 拼接新的url</span><br><span class="line">                  new_url = format(self.url%(self.page_name,self.page_name))</span><br><span class="line">                  # 使用yield进行请求,参数callback为处理这些页面信息所用的函数,可自行设定,也可用递归的方式使用当前的函数</span><br><span class="line">                  yield scrapy.Request(new_url,callback=self.parse)</span><br><span class="line">              else:</span><br><span class="line">                  return li_list</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>重写父类的自动请求方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重写父类方法意味着我们可以自定义数据清洗函数,而不需要局限于parse</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">start_requests</span>(<span class="params">self</span>):</span></span><br><span class="line">	<span class="keyword">for</span> url <span class="keyword">in</span> self.start_urls:</span><br><span class="line">		<span class="keyword">yield</span> scrapy.Request(url,callback=self.parse)</span><br></pre></td></tr></table></figure></li>
+<li><p>要想使scrapy自动发送get请求,需要重写start_requests方法</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="scrapy图片处理"><a href="#scrapy图片处理" class="headerlink" title="scrapy图片处理:"></a>scrapy图片处理:</h2></li>
+</ul>
+<ol>
+<li><p>在scrapy中,有着专门的模块对图片数据进行请求以及处理,我们只需要将获取到的图片url以item的形式传输到我们的管道之中进行处理即可,item对象的创建于寻常的创建方法没设么区别,scrapy.Fields包容性极强,不需要考虑兼容性问题,</p>
+</li>
+<li><p>在提交到管道中去之后,我们可以在管道之中对item中的数据进行处理,</p>
+</li>
+<li><p>使用scrapy中封装的图片处理专用类scrapy.pipelines.images import ImagePipeline</p>
+</li>
+<li><p>创建一个新的管道类,这个管道类继承自ImagePipline</p>
+</li>
+<li><p>```python<br>class ImgSpidersPipeline(ImagesPipeline):</p>
+<pre><code># 对一个图片链接进行请求发送
+# item 就是scrapy提交过来的item数据
+def get_media_requests(self, item, info):
+    yield scrapy.Request(item[&#39;src&#39;])
+
+# 准备文件名
+def file_path(self, request, response=None, info=None):
+    file_name = request.url.split(&#39;/&#39;)[-1]
+    print(&#39;正在下载&#39;,file_name,&#39;............&#39;)
+    return file_name
+# 将item传递给下一个即将执行的管道类
+def item_completed(self, results, item, info):
+    return item
+</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">6. 完成这些之后,我们还需要对图片的存储路径进行设置,在setting文件中添加新的属性</span><br><span class="line"></span><br><span class="line">   - IMAGES_STORE = “imagePath”</span><br><span class="line"></span><br><span class="line">   - imagePath自行设置,最好设置为绝对路径,如果使用相对路径的话,最好参考django中的文件路径的写法,先确定工程的路径,然后再在工程路径的基础上设定相对路径</span><br><span class="line"></span><br><span class="line">   - django方法设置路径如下:</span><br><span class="line"></span><br><span class="line">   - ```python</span><br><span class="line">     import os</span><br><span class="line">     # 获取当前文件夹的主路径</span><br><span class="line">     BASE_DIR = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line">     # 将要添加的图片文件保存路径加入到主路径中去</span><br><span class="line">     IMAGES_STORE = os.path.join(BASE_DIR,&#x27;imgsLib&#x27;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这个方法同样设置在settings文件中</li>
+</ul>
+</li>
+<li><p>完成这些之后,只需要在settings中将写好的管道类进行注册,即可开始这个管道类</p>
+</li>
+<li><p>运行爬虫程序,将会开始全自动下载选中的图片,根据之前学过的方法,即设定网址的基础模板,即可实现图片的批量下载</p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="如何提高scrapy爬虫的效率"><a href="#如何提高scrapy爬虫的效率" class="headerlink" title="如何提高scrapy爬虫的效率"></a>如何提高scrapy爬虫的效率</h2><ol>
+<li>增加并发数量<ul>
+<li>CONCURRENT_REQUESTS = 32</li>
+<li>默认并发数量为32</li>
+<li>可以自行设置</li>
+</ul>
+</li>
+<li>降低日志等级<ul>
+<li>LOG_LEVEL = “INFO”</li>
+<li>LOG_LEVEL = “ERROR”</li>
+</ul>
+</li>
+<li>禁止cookie<ul>
+<li>COOKIES_ENABLED = False</li>
+<li>在scrapy中会自动对cookie进行处理,不管这个页面是否需要验证cookie</li>
+<li>将cookie处理模块进行关闭,将会提升scrapy的执行效率</li>
+</ul>
+</li>
+<li>禁止重试<ul>
+<li>scrapy将会自动对失败的请求进行重试,这严重影响到了爬虫的执行效率,可以将重试功能禁掉,从而提升执行效率</li>
+<li>在settings文件中书写代码</li>
+<li>RETRY_ENABLED = False</li>
+<li>当请求失败的时候,scrapy将不会去处理请求失败的数据,而是会直接跳过进行下一条</li>
+</ul>
+</li>
+<li>减少下载超时<ul>
+<li>DOWNLOAD_TIMEOUT = 10</li>
+<li>写入这段代码,作用是设定请求超时的时间,也就是说,当你在亲求时间超过了十秒的时候依然没有拿到数据的话,将会结束请求,执行下一项,而不是一直等待下去,这个熟知的单位是秒<h2 id="请求传参"><a href="#请求传参" class="headerlink" title="请求传参:"></a>请求传参:</h2></li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>基于请求传参可以实现深度爬取<ul>
+<li>请求传参,在进行scrapy.Request请求的时候,可以使用第三个参数meta</li>
+<li>这个参数的作用是向上一个参数callback这个解析函数中传递参数,她的数据类型是一个字典,通过键值对的形式存储需要传递的数据</li>
+<li>当我们需要将上一个解析函数中实例化好的item对象传递到下一个解析函数中的时候,可以使用这个方法进行传递</li>
+<li>在另一个解析函数 中,通过response参数的meta属性可以拿到参数的内容并进行提取,这个就可以拿到上一个函数中传递过来的item对象,实现不同解析函数之间的请求传递</li>
+<li>通过这个方式可以实现深度爬取,即</li>
+<li>当一整套数据的内容如标题和简介存在于两个关联的页面中,那么我们想要同时获得标题和简介,就需要进行深度爬取,使用这个方式传递的话,将会更简便的实现深度爬取的要求</li>
+</ul>
+</li>
+</ul>
+<h2 id="中间件"><a href="#中间件" class="headerlink" title="中间件:"></a>中间件:</h2><p>在创建好的scrapy工程中,自带了两个基础的中间件</p>
+<p>爬虫中间件TwoSpidersSpiderMiddleware</p>
+<p>下载中间件TwoSpidersDownloaderMiddleware</p>
+<ol>
+<li><h3 id="拦截中间件"><a href="#拦截中间件" class="headerlink" title="拦截中间件"></a>拦截中间件</h3><ol>
+<li><p>作用:批量拦截请求</p>
+</li>
+<li><p>拦截请求:</p>
+<ul>
+<li><p>UA伪装</p>
+<ul>
+<li>目的:将所有的请求的请求头尽可能多的不同的请求载体标识</li>
+</ul>
+</li>
+<li><p>代理操作</p>
+<ul>
+<li>```python<pre><code>def process_exception(self, request, exception, spider):
+    # 在错误捕获阶段进行代理修正,
+    if request.url.split(&#39;:&#39;)[0] == &#39;http&#39;:
+        request.meta[&#39;proxy&#39;] = &#39;http://&#39; + random.choice(PROXY_http)
+    else:
+        request.meta[&#39;proxy&#39;] = &#39;http://&#39; + random.choice(PROXY_https)
+    return request
+</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ```python</span><br><span class="line">      def process_request(self, request, spider):</span><br><span class="line">          # 实现将拦截到的request请求尽可能多的设定成不同的请求载体身份标识</span><br><span class="line">          request.headers[&#x27;User-Agent&#x27;] = random.choice(user_agent_list)</span><br><span class="line">          # 在每次请求之前进行代理修正</span><br><span class="line">          if request.url.split(&#x27;:&#x27;)[0] == &#x27;http&#x27;:</span><br><span class="line">              request.meta[&#x27;proxy&#x27;] = &#x27;http://&#x27; + random.choice(PROXY_http)</span><br><span class="line">          else:</span><br><span class="line">              request.meta[&#x27;proxy&#x27;] = &#x27;http://&#x27; + random.choice(PROXY_https)</span><br><span class="line">          return None</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>拦截响应</p>
+<ul>
+<li>篡改响应对象或直接替换响应对象</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>下载中间件 </p>
+<ol>
+<li><p>```python<br> import scrapy<br> from selenium.webdriver import Chrome,ChromeOptions<br> from selenium.webdriver.chrome.options import Options<br> from wangyi.items import WangyiItem</p>
+<h1 id="创建options实例对象-实现无头浏览器"><a href="#创建options实例对象-实现无头浏览器" class="headerlink" title="创建options实例对象,实现无头浏览器"></a>创建options实例对象,实现无头浏览器</h1><p> chrome_option = Options()<br> chrome_option.add_argument(‘–headless’)<br> chrome_option.add_argument(‘–disable-gpu’)<br> class WangyiSpider(scrapy.Spider):</p>
+<pre><code> name = &#39;wangyi&#39;
+ # allowed_domains = [&#39;www.xxx.com&#39;]
+ # 原始url网页
+ start_urls = [&#39;https://news.163.com/&#39;]
+ pro = Chrome(chrome_options=chrome_option)
+ # 用来存储后续的所有子页面的url
+ cls_url_list = []
+
+ def parse(self, response):
+     # 准备要爬取的目标
+     index_list = [3,4]
+     li_list = response.xpath(&#39;//*[@id=&quot;index2016_wrap&quot;]/div[1]/div[2]/div[2]/div[2]/div[2]/div/ul/li&#39;)
+     # print(li_list)
+     for index in index_list:
+         li = li_list[index]
+         # 获取子页面url
+         new_url = li.xpath(&#39;./a/@href&#39;).extract_first()
+         # 获取独影的分类名称
+         news = li.xpath(&#39;./a/text()&#39;).extract_first()
+         # 将子页面的url添加到类属性中进行存储
+         self.cls_url_list.append(new_url)
+         # 开始对子页面进行过请求,并将请求数据交给下一个解析函数
+         yield scrapy.Request(url=new_url,callback=self.new_prase)
+ 
+ def new_prase(self,response):
+     div_list = response.xpath(&#39;/html/body/div/div[3]/div[4]/div[1]/div/div/ul/li/div/div&#39;)
+     for div in div_list:
+         # 获得新闻标题与新闻详情页面的url
+         title = div.xpath(&#39;./div/div/h3/a/text()&#39;).extract_first()
+         new_url = div.xpath(&#39;./div/div/h3/a/@href&#39;).extract_first()
+         # 创建item对象,并将后面会用到的标题存储进去
+         item = WangyiItem()
+         item[&#39;title&#39;] = title
+         # 开始对详情页面进行请求,并将获取到的页面源码与item对象一起传递给下一个解析函数
+         yield scrapy.Request(url=new_url,callback=self.content_parse,meta=&#123;&#39;item&#39;: item&#125;)
+ def content_parse(self,response):
+     # 抽取传递过来的item对象
+     item = response.meta[&#39;item&#39;]
+     # 解析源码中的内容数据
+     content = response.xpath(&#39;//*[@id=&quot;endText&quot;]/p/text()&#39;).extract()
+     # 将内容存储进item对象
+     item[&#39;content&#39;] = &#39;&#39;.join(content)
+     # 将数据提交给管道
+     yield item
+
+ def closed(self,spider):
+     # 当爬虫结束时,关闭selenium浏览器
+     self.pro.quit()
+</code></pre>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    以上为爬虫文件中的构造</span><br><span class="line"></span><br><span class="line">2. ```python</span><br><span class="line">    class WangyiPipeline(object):</span><br><span class="line">        # 在爬虫开始运行时进行文件的创建</span><br><span class="line">        def open_spider(self, spider):</span><br><span class="line">            self.fp = open(&#x27;./news.txt&#x27;, &#x27;w&#x27;, encoding=&#x27;utf-8&#x27;)</span><br><span class="line">    </span><br><span class="line">    	# 对提交的item数据进行处理</span><br><span class="line">        def process_item(self, item, spider):</span><br><span class="line">            title = item[&#x27;title&#x27;]</span><br><span class="line">            content = item[&#x27;content&#x27;]</span><br><span class="line">            # print(item)</span><br><span class="line">            # 将item数据进行存储</span><br><span class="line">            self.fp.write(&#x27;[&#x27; + &#x27;title&#x27; + &#x27;:&#x27; + title + &#x27;,&#x27; + &#x27;content&#x27; + &#x27;:&#x27; + content + &#x27;]&#x27; + &#x27;\n&#x27;)</span><br><span class="line">            return item</span><br><span class="line">        def close_spider(self, spider):</span><br><span class="line">            # 爬虫结束时,关闭打开的文件</span><br><span class="line">            self.fp.close()</span><br></pre></td></tr></table></figure>
+
+<p> 以上为管道中的代码</p>
+</li>
+<li><p>```python<br> from scrapy import signals<br> from scrapy.http import HtmlResponse<br> from time import sleep<br> class WangyiDownloaderMiddleware(object):</p>
+<pre><code> # 捕获响应数据并进行检测
+ def process_response(self, request, response, spider):
+     # 抽取爬虫文件中的模拟浏览器
+     pro = spider.pro
+     # 对请求对象进行解析,当对象为主页面的时候,无视
+     # spider参数为实例化的爬虫类
+     # 可以直接调用爬虫类的一些方法
+     if request.url in spider.cls_url_list:
+         # 通过模拟浏览器发起请求,绕开动态加载
+         pro.get(request.url)
+         # 等待一秒,确保数据加载完成
+         sleep(1)
+         # 获取页面源码
+         page_text = pro.page_source
+         # 实例化HtmlResponse对象
+         # url    请求的url对象
+         # body   要返回的页面源码数据
+         # encoding  设定页面源码的编码格式
+         # request   请求不变
+         new_response = HtmlResponse(url=request.url,body=page_text,encoding=&#39;utf-8&#39;,request=request)
+         # 将准备好的数据返回
+         return new_response
+     return response
+</code></pre>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">       以上为中间件中的数据</span><br><span class="line"></span><br><span class="line">   4. 在这三种模块的辅助之下,可以实现对网站数据的深度爬取,必要时,可以添加页码数据,从而确保这个爬虫可以精确定位到每一个分类下的所有数据的每一页数据,也就是说,使用scrapy爬虫,可以直接实现对整个目标网站的覆盖性爬取数据</span><br><span class="line"></span><br><span class="line">   5. 同时,由于scrapy默认是异步运行的,这种形态的爬虫,工作效率比起requests要高得多</span><br><span class="line"></span><br><span class="line">3. ### UserAgent伪装</span><br><span class="line"></span><br><span class="line">   1. ```python</span><br><span class="line">      from fake_useragent import UserAgent</span><br><span class="line">      a = UserAgent()</span><br><span class="line">      print(a.Chrome)</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ol>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Scrayp详解</p><p><a href="http://sokrates.com.cn/2022/11/30/Study-notes-Python-Spider-scrapy详解/">http://sokrates.com.cn/2022/11/30/Study-notes-Python-Spider-scrapy详解/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>Kawakami Ari</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2022-11-30</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2022-11-29</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Python/">Python</a><a class="link-muted mr-2" rel="tag" href="/tags/Spider/">Spider</a></div><div class="sharethis-inline-share-buttons"></div><script src="https://ppoffice.github.io/hexo-theme-icarus/categories/Plugins/Share/" defer></script></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3><div class="buttons is-centered"><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>支付宝</span><span class="qrcode"><img src="/img/alipay.png" alt="支付宝"></span></a><a class="button donate" data-type="paypal" onclick="document.getElementById(&#039;paypal-donate-form&#039;).submit()"><span class="icon is-small"><i class="fab fa-paypal"></i></span><span>Paypal</span></a><form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" rel="noopener" id="paypal-donate-form"><input type="hidden" name="cmd" value="_donations"><input type="hidden" name="business" value="kawakami-araki@foxmail.com"><input type="hidden" name="currency_code" value="USD"></form><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>微信</span><span class="qrcode"><img src="/img/weixin.png" alt="微信"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2022/11/30/Study-notes-Python-Spider-requests%E8%AF%B7%E6%B1%82%E6%A8%A1%E5%9D%97%E8%AF%A6%E8%A7%A3/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">requests请求模块详解</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/11/30/Study-notes-Python-Spider-redis%E6%A6%82%E8%A7%88/"><span class="level-item">redis概览</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><!--!--></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar is-rounded" src="/img/author.jpg" alt="Kawakami Ari"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Kawakami Ari</p><p class="is-size-6 is-block">Otaku</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">95</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">12</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">33</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/kawakami-araki/" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/kawakami-araki"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a></div></div></div><!--!--><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/C/"><span class="level-start"><span class="level-item">C++</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/categories/Django/"><span class="level-start"><span class="level-item">Django</span></span><span class="level-end"><span class="level-item tag">21</span></span></a></li><li><a class="level is-mobile" href="/categories/Django-DRF/"><span class="level-start"><span class="level-item">Django DRF</span></span><span class="level-end"><span class="level-item tag">8</span></span></a></li><li><a class="level is-mobile" href="/categories/Hexo/"><span class="level-start"><span class="level-item">Hexo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/JavaScript/"><span class="level-start"><span class="level-item">JavaScript</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/Python/"><span class="level-start"><span class="level-item">Python</span></span><span class="level-end"><span class="level-item tag">40</span></span></a></li><li><a class="level is-mobile" href="/categories/VTD/"><span class="level-start"><span class="level-item">VTD</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/categories/scala/"><span class="level-start"><span class="level-item">scala</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%97%A5%E5%B8%B8/"><span class="level-start"><span class="level-item">日常</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E6%B0%B8%E5%8A%AB%E6%97%A0%E9%97%B4%E8%8B%B1%E9%9B%84%E8%AE%BE%E8%AE%A1%E6%B4%BB%E5%8A%A8/"><span class="level-start"><span class="level-item">永劫无间英雄设计活动</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile" href="/categories/%E8%8D%89%E7%A8%BF%E7%AE%B1/"><span class="level-start"><span class="level-item">草稿箱</span></span><span class="level-end"><span class="level-item tag">6</span></span></a></li><li><a class="level is-mobile" href="/categories/%E8%AE%BE%E8%AE%A1%E7%A8%BF/"><span class="level-start"><span class="level-item">设计稿</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Big-Data/"><span class="tag">Big Data</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/C/"><span class="tag">C++</span><span class="tag">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/DRF/"><span class="tag">DRF</span><span class="tag">8</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Django/"><span class="tag">Django</span><span class="tag">29</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Flask/"><span class="tag">Flask</span><span class="tag">16</span></a></div><div class="control"><a class="tags has-addons" href="/tags/GIT/"><span class="tag">GIT</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/JavaScript/"><span class="tag">JavaScript</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/LOL/"><span class="tag">LOL</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/MD5/"><span class="tag">MD5</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/MongoDB/"><span class="tag">MongoDB</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Numpy/"><span class="tag">Numpy</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/ORM/"><span class="tag">ORM</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Pandas/"><span class="tag">Pandas</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Python/"><span class="tag">Python</span><span class="tag">68</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Redis/"><span class="tag">Redis</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Scala/"><span class="tag">Scala</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Spark/"><span class="tag">Spark</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Spider/"><span class="tag">Spider</span><span class="tag">16</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Vue/"><span class="tag">Vue</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Warframe/"><span class="tag">Warframe</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/ajax/"><span class="tag">ajax</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/matplotlib/"><span class="tag">matplotlib</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%9F%BA%E7%A1%80/"><span class="tag">基础</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%B9%BB%E6%83%B3/"><span class="tag">幻想</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%8A%80%E6%9C%AF/"><span class="tag">技术</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%95%99%E7%A8%8B/"><span class="tag">教程</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%98%9F%E9%99%85%E6%88%98%E7%94%B2/"><span class="tag">星际战甲</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B0%B8%E5%8A%AB%E6%97%A0%E9%97%B4/"><span class="tag">永劫无间</span><span class="tag">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%B8%B8%E6%88%8F/"><span class="tag">游戏</span><span class="tag">6</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%81%B5%E6%84%9F/"><span class="tag">灵感</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%B7%A8%E5%9F%9F/"><span class="tag">跨域</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%BD%A6%E4%B8%87/"><span class="tag">车万</span><span class="tag">4</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%9A%8F%E7%AC%94/"><span class="tag">随笔</span><span class="tag">2</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen is-sticky"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3 is-sticky"><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://blog.csdn.net/weixin_45707730?spm=1000.2115.3001.5343" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Tyt</span></span><span class="level-right"><span class="level-item tag">blog.csdn.net</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-11-30T15:10:51.393Z">2022-11-30</time></p><p class="title"><a href="/2022/11/30/Study-notes-VTD-VTD%E8%B7%AF%E7%BD%91%E7%BC%96%E8%BE%91%E5%99%A8/">VTD路网编辑器相关</a></p><p class="categories"><a href="/categories/VTD/">VTD</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-11-30T15:10:51.393Z">2022-11-30</time></p><p class="title"><a href="/2022/11/30/Study-notes-VTD-VTD%E5%AE%89%E8%A3%85/">VTD(Virtual Test Drive)相关安装流程以及注意事项</a></p><p class="categories"><a href="/categories/VTD/">VTD</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-11-30T15:10:51.391Z">2022-11-30</time></p><p class="title"><a href="/2022/11/30/Study-notes-spark%E9%A1%B9%E7%9B%AE%E7%9B%B8%E5%85%B3%E6%B3%A8%E9%87%8A/">关于一个spark项目的详细拆分解析</a></p><p class="categories"><a href="/categories/scala/">scala</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-11-30T15:10:51.390Z">2022-11-30</time></p><p class="title"><a href="/2022/11/30/Study-notes-Python-Spider-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%8D%8F%E7%A8%8B/">进程线程协程与爬虫</a></p><p class="categories"><a href="/categories/Python/">Python</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-11-30T15:10:51.389Z">2022-11-30</time></p><p class="title"><a href="/2022/11/30/Study-notes-Python-Spider-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%95%B0%E6%8D%AE%E7%88%AC%E5%8F%96%E4%B8%8E%E8%A7%A3%E6%9E%90/">移动端数据爬取</a></p><p class="categories"><a href="/categories/Python/">Python</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/11/"><span class="level-start"><span class="level-item">十一月 2022</span></span><span class="level-end"><span class="level-item tag">95</span></span></a></li></ul></div></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.png" alt="Chevalier de bronze" height="28"></a><p class="is-size-7"><span>&copy; 2022 Kawakami Ari</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
